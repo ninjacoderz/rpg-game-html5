@@ -20,15 +20,25 @@ window.addEventListener('load', function() {
             this.world = new World();
             this.hero = new Hero({
                 game: this,
-                position: {x: 5, y: 5}
+                position: {x: 5, y: 5},
+                sprite: {
+                    x: 0, 
+                    y:0, 
+                    width: 64, 
+                    height:64, 
+                    image: document.getElementById("hero1")}
             });
             this.input = new Input();
         }
 
         render(ctx) {
+            this.hero.update();
+            this.world.drawBackground(ctx);
             this.world.drawGrid(ctx);
             this.hero.draw(ctx);
+            this.world.drawForeground(ctx);
         }
+
         update(){
             this.hero.update();
         }

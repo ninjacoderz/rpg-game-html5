@@ -1,5 +1,6 @@
 import { GameObject } from "./gameObject.js";
 import { DOWN, UP, LEFT, RIGHT } from "./input.js";
+import { TILE_SIZE } from "./main.js";
 
 export class Hero extends GameObject{
     constructor({
@@ -14,19 +15,24 @@ export class Hero extends GameObject{
             position,
             scale
         });
+        this.speed = 1;
     }
 
     update() {
-        if(this.game.input.lastKey === UP){
-            this.position.y--;
-        } else if(this.game.input.lastKey === DOWN){
-            this.position.y++;
-        }
-        else if(this.game.input.lastKey === LEFT){
-            this.position.x--;
-        }
-        else if(this.game.input.lastKey === RIGHT){
-            this.position.x++;
+        const distance = this.moveTowards(this.destinationPosition, this.speed);
+        const arrived = distance <= this.speed; 
+        if(arrived){
+            if(this.game.input.lastKey === UP){
+                this.destinationPosition.y -= TILE_SIZE;
+            } else if(this.game.input.lastKey === DOWN){
+                this.destinationPosition.y += TILE_SIZE;
+            }
+            else if(this.game.input.lastKey === LEFT){
+                this.destinationPosition.x -= TILE_SIZE;
+            }
+            else if(this.game.input.lastKey === RIGHT){
+                this.destinationPosition.x += TILE_SIZE;
+            }
         }
     }
 }
