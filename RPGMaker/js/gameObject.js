@@ -1,4 +1,4 @@
-import { TILE_SIZE } from "./main.js";
+import { HALF_TILE, TILE_SIZE } from "./main.js";
 
 export class GameObject {
 
@@ -14,9 +14,15 @@ export class GameObject {
         this.scale = scale ?? 1;
 
         this.destinationPosition = {x: 0, y: 0};
+        this.destinationPosition.x = this.position.x;
+        this.destinationPosition.y = this.position.y;
+
+        
+
         this.distanceToTravel = {x: 0, y: 0};
         this.width = this.sprite.width * this.scale;
         this.height = this.sprite.height * this.scale;
+        this.halfWidth = this.width/2;
     }
 
     moveTowards(destinationPosition, speed) {
@@ -48,23 +54,27 @@ export class GameObject {
      */
     
     draw(ctx) {
-        ctx.fillStyle='blue';
-        ctx.fillRect(
-            this.position.x, 
-            this.position.y, 
-            TILE_SIZE, TILE_SIZE
-        )
-        ctx.strokeStyle = 'yellow';
-        ctx.strokeRect(
-            this.destinationPosition.x, 
-            this.destinationPosition.y, 
-            TILE_SIZE, TILE_SIZE
-        )
+        if(this.game.debug){
+            ctx.fillStyle='blue';
+            ctx.fillRect(
+                this.position.x, 
+                this.position.y, 
+                TILE_SIZE, TILE_SIZE
+            )
+            ctx.strokeStyle = 'yellow';
+            ctx.strokeRect(
+                this.destinationPosition.x, 
+                this.destinationPosition.y, 
+                TILE_SIZE, TILE_SIZE
+            )
+        }
         ctx.drawImage(this.sprite.image, 
-            this.sprite.x, this.sprite.y, 
-            this.sprite.width, this.sprite.height,
-            this.position.x,
-            this.position.y,
+            this.sprite.x * this.sprite.width, 
+            this.sprite.y * this.sprite.height, 
+            this.sprite.width, 
+            this.sprite.height,
+            this.position.x + HALF_TILE - this.halfWidth,
+            this.position.y + TILE_SIZE - this.height,
             this.width ,
             this.height
         )

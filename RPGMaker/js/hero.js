@@ -15,24 +15,57 @@ export class Hero extends GameObject{
             position,
             scale
         });
-        this.speed = 1;
+        this.speed = 100;
+        this.maxFrame = 8;
+        this.moving = false;
     }
 
-    update() {
-        const distance = this.moveTowards(this.destinationPosition, this.speed);
-        const arrived = distance <= this.speed; 
+    update(deltaTime) {
+        const scaledSpeed = this.speed * (deltaTime/1000 );
+
+        const distance = this.moveTowards(this.destinationPosition, scaledSpeed);
+
+        const arrived = distance <= scaledSpeed; 
+        
+
+        let nextX = this.destinationPosition.x;
+        let nextY = this.destinationPosition.y;
         if(arrived){
             if(this.game.input.lastKey === UP){
-                this.destinationPosition.y -= TILE_SIZE;
+                nextY-= TILE_SIZE;
+                this.sprite.y = 8;
             } else if(this.game.input.lastKey === DOWN){
-                this.destinationPosition.y += TILE_SIZE;
+                nextY += TILE_SIZE;
+                this.sprite.y = 10;
             }
             else if(this.game.input.lastKey === LEFT){
-                this.destinationPosition.x -= TILE_SIZE;
+                nextX -= TILE_SIZE;
+                this.sprite.y = 9;
             }
             else if(this.game.input.lastKey === RIGHT){
-                this.destinationPosition.x += TILE_SIZE;
+                nextX += TILE_SIZE;
+                this.sprite.y = 11;
+            }
+            const col = nextX / TILE_SIZE;
+            const row = nextY / TILE_SIZE;
+            const isCollision = this.game.world.checkCollision(row, col);
+            
+            if(isCollision !== 1) {
+                this.destinationPosition.x = nextX;
+                this.destinationPosition.y = nextY;
             }
         }
+
+        if(this.game.input.keys.length > 0 || !arrived){
+            this.moving = true;
+        } else {
+            this.moving = false;
+        }
+        if(this.game.eventUpdate && this.moving) {
+            this.sprite.x < this.maxFrame ? this.sprite.x++ : this.sprite.x = 0;
+        } else if(!this.moving) {
+            this.sprite.x = 0;
+        }
+        
     }
 }
