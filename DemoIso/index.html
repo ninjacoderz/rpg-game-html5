@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanilla JavaScript Game Starter Kit</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+    <div class="assets">
+        <img onload="startScene()" src="https://i.ibb.co/xz5jtnc/tile.png" id="floor"/>
+        <img onload="startScene()" src="https://i.ibb.co/8gHBHd8/cube.png" id="wall"/>
+    </div>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
