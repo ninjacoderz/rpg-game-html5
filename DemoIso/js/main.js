@@ -36,8 +36,8 @@ function startScene(event){
     let tileWidth = 50;
 
     function drawScene(time) {
-        for ( var x = 0; x < 50; x++) {
-            for ( var y = 0; y < 50; y++) {
+        for ( var x = 0; x < 15; x++) {
+            for ( var y = 0; y < 15; y++) {
                 let p = new Point();
                 p.x = x * tileWidth;
                 p.y = y * tileWidth;
