@@ -41,7 +41,7 @@ function Camera(map, width, height) {
     this.width = width;
     this.height = height;
     this.maxX = map.cols * map.tsize - width;
-    this.maxY = map.row * map.tsize - height;
+    this.maxY = map.rows * map.tsize - height;
 }
 
 Camera.SPEED = 256;
@@ -68,13 +68,6 @@ Game.init = function(){
     this.tileAtlas = Loader.getImage('tiles');
     this.camera = new Camera(map, 512, 512);
 
-    this.layerCanvas = map.layers.map(function () {
-        var c = document.createElement('canvas');
-        c.width = 512;
-        c.height = 512;
-        return c;
-    });
-    this._drawMap();
 }
 
 Game.update = function (delta) {
@@ -89,7 +82,6 @@ Game.update = function (delta) {
 
     if (dirx !== 0 || diry !== 0) {
         this.camera.move(delta, dirx, diry);
-        this.hasScrolled = true;
     }
 }
 
@@ -100,9 +92,6 @@ Game._drawMap = function () {
 };
 
 Game._drawLayer = function (layer) {
-    var context = this.layerCanvas[layer].getContext('2d');
-    context.clearRect(0, 0, 512, 512);
-
     var startCol = Math.floor(this.camera.x / map.tsize);
     var endCol = startCol + (this.camera.width / map.tsize);
     var startRow = Math.floor(this.camera.y / map.tsize);
@@ -116,7 +105,7 @@ Game._drawLayer = function (layer) {
             var x = (c - startCol) * map.tsize + offsetX;
             var y = (r - startRow) * map.tsize + offsetY;
             if (tile !== 0) { // 0 => empty tile
-                context.drawImage(
+                this.ctx.drawImage(
                     this.tileAtlas, // image
                     (tile - 1) * map.tsize, // source x
                     0, // source y
@@ -133,12 +122,7 @@ Game._drawLayer = function (layer) {
 };
 
 Game.render = function () {
-    // re-draw map if there has been scroll
-    if (this.hasScrolled) {
-        this._drawMap();
-    }
-
-    // draw the map layers into game context
-    this.ctx.drawImage(this.layerCanvas[0], 0, 0);
-    this.ctx.drawImage(this.layerCanvas[1], 0, 0);
+    this._drawLayer(0);
+    // draw map top layer
+    this._drawLayer(1);
 };
